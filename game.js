@@ -1,25 +1,26 @@
 ;(function(){
-  const ctx = document.getElementById("canvas").getContext("2d")
+  const ctx = document.getElementById("canvas").getContext("2d");
   class Random{
     static get(init,final){
-      return Math.floor(Math.random() * final) + init
+      return Math.floor(Math.random() * final) + init;
     }
   }
 
   class Food{
     constructor(x,y){
-      this.x = x
-      this.y = y
-      this.width = 10
-      this.height = 10
+      this.x = x;
+      this.y = y;
+      this.width = 10;
+      this.height = 10;
     }
+
     draw(){
-      ctx.fillRect(this.x,this.y,this.width,this.height)
+      ctx.fillRect(this.x,this.y,this.width,this.height);
     }
     static generate(){
-        const x = Random.get(0,600)
-        const y = Random.get(0,400)      
-        return new Food(x,y)
+        const x = Random.get(0,600);
+        const y = Random.get(0,400);     
+        return new Food(x,y);
     }
   }
   class Square{
@@ -66,6 +67,7 @@
       if(this.hasBack()){
         this.backSquare.addNew()
       }else{
+        console.log("X es:" + this.x)
         this.backSquare = new Square(this.x - (this.width+5),this.y)
       }
     }
@@ -77,6 +79,7 @@
       ctx.fillRect(this.x,this.y,this.width,this.height)
       if(this.hasBack()) this.backSquare.draw()
     }
+
     hit(square,imSecond=false){
       if(square === null && !this.hasBack()) return false
       if(square === null) return this.backSquare.hit(this,true)
@@ -88,23 +91,17 @@
       if(this.hasBack()) return snakeHit(square,this) || this.backSquare.hit(square)
       
       return snakeHit(square,this)    
-    }  
+    }
+
+    hitBorder()
+    {
+       return this.x>480 || this.x<10 || this.y>280 || this.y<0
+    }
+
   }
   class Snake{
     constructor(){
       this.mainSquare = new Square(0,0)
-      this.eat()
-      this.eat()
-      this.eat()
-      this.eat()
-      this.eat()
-      this.eat()
-      this.eat()
-      this.eat()
-      this.eat()
-      this.eat()
-      this.eat()
-      this.eat()
       this.eat()
       this.eat()
       this.horizontalDirection = "right"
@@ -117,6 +114,8 @@
     }
 
     left(){
+      if(this.horizontalDirection == "right")
+        return;
       this.clear()
       this.horizontalDirection = "left"
     }
@@ -155,13 +154,15 @@
       this.mainSquare.draw()
     }
     alive(){
-      return !this.mainSquare.hit(null)
+      return !this.mainSquare.hit(null) && !this.mainSquare.hitBorder()
     }
   }
   
   const snake = new Snake()
   
   let foods = []
+  var allowHorizontalMov = true;
+  var allowVerticalMov = true;
   
   window.addEventListener("keydown",(ev)=>{
     // 39 right
@@ -169,10 +170,31 @@
     // 38 up
     // 40 down
     ev.preventDefault()
-    if(ev.keyCode == 37) snake.left()
-    if(ev.keyCode == 38) snake.up()
-    if(ev.keyCode == 39) snake.right()    
-    if(ev.keyCode == 40) snake.down()
+    if(ev.keyCode == 37 && allowHorizontalMov==true)
+    {
+      console.log("presione hacia la izq")
+      allowHorizontalMov=false;
+      allowVerticalMov=true;
+      snake.left()
+    }
+    if(ev.keyCode == 38 && allowVerticalMov == true)
+    { 
+      allowHorizontalMov=true;
+      allowVerticalMov=false;
+      snake.up()
+    }
+    if(ev.keyCode == 39 && allowHorizontalMov==true )
+    { 
+      allowHorizontalMov=false;
+      allowVerticalMov=true;
+      snake.right()  
+    }  
+    if(ev.keyCode == 40 && allowVerticalMov == true) 
+    {
+      allowHorizontalMov=true;
+      allowVerticalMov=false;
+      snake.down()
+    }
     return false
   })
   
@@ -182,7 +204,7 @@
     setTimeout(()=>{
       removeFromFoods(food)
     },10000)
-  },5000)
+  },1000) //Velocidad comida de la serpiente(5000)
   
   
   
@@ -192,7 +214,7 @@
     drawFood()
     snake.draw()
     if(!snake.alive()) window.clearInterval(gameInterval)
-  },100)
+  },100) //Velocidad movimiento de la serpiente
   
   
   function drawFood(){
@@ -225,7 +247,7 @@
   }
   function hit(a,b){
     var hit = false;
-    //Colsiones horizontales
+    //Colisiones horizontales
     if(b.x + b.width >= a.x && b.x < a.x + a.width)
     {
       //Colisiones verticales
@@ -248,3 +270,17 @@
   }
   
 })()
+
+
+var head = document.getElementById("head");
+var theBody = document.getElementById("theBody");
+var theSpan= document.createElement("span");
+theBody.appendChild(theSpan);
+theSpan.addEventListener("keydown", rightMov(theSpan,60));
+//theBody.appendChild(head.cloneNode(true));
+function rightMov(span , coord)
+{
+  console.log("Entré");
+  span.style.left= (coord-5)+"px";
+}
+//head.style.background= "black";
