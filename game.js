@@ -85,7 +85,7 @@
       
       
       
-      if(this.hasBack()) return snakeHit(square,this)||this.backSquare.hit(square)
+      if(this.hasBack()) return snakeHit(square,this) || this.backSquare.hit(square)
       
       return snakeHit(square,this)    
     }  
