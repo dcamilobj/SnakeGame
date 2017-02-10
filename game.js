@@ -14,8 +14,35 @@
       this.height = 10;
     }
 
-    draw(){
-      ctx.fillRect(this.x,this.y,this.width,this.height);
+    draw(){  //Dibujo cabeza de la serpiente
+      /*ctx.beginPath();
+      ctx.arc(this.x, this.y, 5, 0, 2 * Math.PI);
+      ctx.fillStyle = 'red';
+      ctx.stroke();*/
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 5, 0, 2 * Math.PI, false);
+      setInterval(function(){ ctx.fillStyle = 'green';
+      ctx.fill(); }, 3000);
+      setInterval(function(){ ctx.fillStyle = 'orange';
+      ctx.fill(); }, 3000);
+      ctx.fillStyle = 'green';
+      ctx.fill();
+      ctx.fillStyle = 'orange';
+      ctx.fill();
+      ctx.fillStyle = 'green';
+      ctx.fill();
+      ctx.fillStyle = 'orange';
+      ctx.fill();
+      ctx.fillStyle = 'green';
+      ctx.fill();
+      ctx.fillStyle = 'orange';
+      ctx.fill();
+      //ctx.lineWidth = 5;
+      //ctx.strokeStyle = '#003300';
+      ctx.stroke();
+
+      /*ctx.fillRect(this.x,this.y,this.width,this.height);
+      ctx.fillStyle = 'green';*/
     }
     static generate(){
         const x = Random.get(0,600);
@@ -67,7 +94,6 @@
       if(this.hasBack()){
         this.backSquare.addNew()
       }else{
-        console.log("X es:" + this.x)
         this.backSquare = new Square(this.x - (this.width+5),this.y)
       }
     }
@@ -76,7 +102,11 @@
       return this.backSquare !== null
     }
     draw(){
-      ctx.fillRect(this.x,this.y,this.width,this.height)
+      /*ctx.beginPath();
+      ctx.arc(this.x+50, this.y+50, 5, 0, 2 * Math.PI);
+      ctx.stroke();*/
+      ctx.fillRect(this.x,this.y,this.width,this.height);
+      ctx.fillStyle = 'blue';
       if(this.hasBack()) this.backSquare.draw()
     }
 
@@ -172,7 +202,6 @@
     ev.preventDefault()
     if(ev.keyCode == 37 && allowHorizontalMov==true)
     {
-      console.log("presione hacia la izq")
       allowHorizontalMov=false;
       allowVerticalMov=true;
       snake.left()
@@ -275,12 +304,17 @@
 var head = document.getElementById("head");
 var theBody = document.getElementById("theBody");
 var theSpan= document.createElement("span");
+ //onmousedown="mouseDown()" onmouseup="mouseUp()"
 theBody.appendChild(theSpan);
-theSpan.addEventListener("keydown", rightMov(theSpan,60));
+//theSpan.addEventListener("keydown", rightMov(theSpan,60));
 //theBody.appendChild(head.cloneNode(true));
-function rightMov(span , coord)
-{
-  console.log("Entré");
-  span.style.left= (coord-5)+"px";
+function mouseDown() {
+    var head = document.getElementById("head").style.left = "500px";
+    console.log("Coordenada en x es: " + head.x);
 }
+
+function mouseUp() {
+    document.getElementById("head").style.left = "600px";
+}
+  
 //head.style.background= "black";
